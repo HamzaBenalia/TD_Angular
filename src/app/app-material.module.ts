@@ -16,12 +16,14 @@ import {MatInputModule} from "@angular/material/input";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSelectModule} from "@angular/material/select";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarModule} from "@angular/material/snack-bar";
 
 
 
 @NgModule({
   exports:[
     MatFormFieldModule,
+    MatSnackBarModule,
     MatSlideToggleModule,
     MatInputModule,
     MatTooltipModule,
@@ -37,6 +39,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
+  ],
+  providers: [
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500, verticalPosition:'top'}}
   ]
 })
 export class AppMaterialModule { }

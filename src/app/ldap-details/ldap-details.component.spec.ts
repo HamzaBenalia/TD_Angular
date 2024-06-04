@@ -10,6 +10,7 @@ describe('LdapDetailsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [LdapDetailsComponent]
     });
+    // @ts-ignore
     fixture = TestBed.createComponent(LdapDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -14,13 +14,15 @@ export class UsersService {
   }
 
   updateUser(userToUpdate: UserLdap): Observable<UserLdap> {
-
+    console.log('Attempting to update user:', userToUpdate);
+    console.log('Current users:', this.users);
     const user =this.users.find(u=>u.login ===userToUpdate.login);
     if(user){
       user.nom = userToUpdate.nom;
       user.prenom =userToUpdate.prenom;
       user.nomComplet=userToUpdate.nomComplet;
       user.motDePasse=userToUpdate.motDePasse;
+
 
       return of(userToUpdate);
     }
@@ -35,6 +37,7 @@ export class UsersService {
   }
 
   getUser(login: string): Observable<UserLdap> {
+    console.log("login recherché :", login);
     const user: UserLdap | undefined = this.users.find(user => user.login === login);
     if (user !== undefined) {
       return of(user);

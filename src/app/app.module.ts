@@ -16,6 +16,7 @@ import { LdapDetailsComponent } from './ldap-details/ldap-details.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { LdapEditComponent } from './ldap-edit/ldap-edit.component';
 import { LdapAddComponent } from './ldap-add/ldap-add.component';
+import { AlertComponent } from './share/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -23,9 +24,9 @@ import { LdapAddComponent } from './ldap-add/ldap-add.component';
     LdapListComponent,
     PageNotFoundComponent,
     NavbarComponent,
-    LdapDetailsComponent,
     LdapEditComponent,
     LdapAddComponent,
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

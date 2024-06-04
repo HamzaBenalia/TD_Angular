@@ -1,4 +1,3 @@
-import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
@@ -6,18 +5,24 @@ import {CdkTableDataSourceInput} from "@angular/cdk/table";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserLdap} from "../models/user-ldap";
 import {UsersService} from "../service/users.service";
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ConfirmValidParentMatcher, passwordMatchingValidator} from "./passwords-validator-directive";
+import {Directive, Injectable} from "@angular/core";
 //
 // @Component({
 //   selector: 'app-ldap-details',
 //   templateUrl: './ldap-details.component.html',
 //   styleUrls: ['./ldap-details.component.css']
 // })
-export class LdapDetailsComponent {
-  passwordPlaceHolder:String;
+
+
+export abstract class LdapDetailsComponent {
+  passwordPlaceHolder:string;
+  errorMessage='';
   user: UserLdap | undefined;
   processLoadRunning : boolean = false;
   processValidateRunning : boolean = false;
+  confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
   userForm: FormGroup = this.fb.group({
 
@@ -30,9 +35,11 @@ export class LdapDetailsComponent {
   passwordGroup: this.fb.group( {
     password : [''],
     confirmPassword : ['']
-}),
+}, {validators: passwordMatchingValidator}),
 mail:{value:'', disabled: true},
 });
+
+  protected get passwordForm() {return this.userForm.get('passwordGroup');}
 
 
 
@@ -42,16 +49,20 @@ mail:{value:'', disabled: true},
     private router: Router,
   ) {
     this.passwordPlaceHolder = 'Mot de passe' + (this.addForm ? '' : '(valid si inchangé)');
+    if (this.addForm){
+      this.passwordForm?.get('password')?.addValidators(Validators.required);
+      this.passwordForm?.get('confirmPassword')?.addValidators(Validators.required);
+    }
   }
 
 
-  protected ngOnInit(): void {
+  protected OnInit(): void {
 
   }
 
 
 
-  goToLdap(): void{
+  protected goToLdap(): void{
     this.router.navigate(['/users/list']).then((e:boolean): void =>{
       if(!e){
         console.error('Navigation has failed')
@@ -59,10 +70,11 @@ mail:{value:'', disabled: true},
     });
   }
 
-  onSubmitForm() : void {
+  protected onSubmitForm() : void {
     this.validateForm();
   }
-  isFormValid(): boolean {
+
+  protected isFormValid(): boolean {
     return this.userForm.valid
       && (!this.addForm || this.formGetValue('passwordGroup.password') !== '');
   }
@@ -70,7 +82,7 @@ mail:{value:'', disabled: true},
   abstract validateForm():void
 
   private formGetValue(name:string): string {
-    const control: AbstractControl<any,any>|null = this.userForm.get(name);
+    const control= this.userForm.get(name);
     if (control ===null) {
       console.error("L")
       return ""
@@ -95,7 +107,11 @@ mail:{value:'', disabled: true},
     this.formSetValue('nom', this.user.nom);
     this.formSetValue('prenom', this.user.prenom);
     this.formSetValue('mail', this.user.mail);
-
+    // this.formSetValue('employeNumero', this.user.employeNumero);
+    // this.formSetValue('employeNiveau', this.user.employeNiveau);
+    // this.formSetValue('dateEmbauche', this.user.dateEmbauche);
+    // this.formSetValue('publisherId', this.user.publisherId);
+    // this.formSetValue('active', this.user.active);
   }
 protected getUserFromFormControl(): UserLdap{
     return {
@@ -110,15 +126,22 @@ protected getUserFromFormControl(): UserLdap{
       publisherId:1,
       active:true,
       motDePasse:'',
-      role:'Role_USER'
+      role:'ROLE_USER'
     };
 }
 
 
-  updateMail():void {}
+  updateMail(): void {
+    const control = this.userForm.get('mail');
+    if (control === null) {
+      console.error("L'objet 'mail' du formulaire n'existe pas.");
+      return;
+    }
+    control.setValue(this.formGetValue('login').toLowerCase() + '@epsi.lan');
+  }
 
 
-  updateLogin(): void {
+  protected updateLogin(): void {
     const control = this.userForm.get('login');
     if (control === null) {
       console.error("l'objet login du formulair n'existe pas ");
@@ -127,8 +150,5 @@ protected getUserFromFormControl(): UserLdap{
     control.setValue((this.formGetValue('prenom') + '.' + this.formGetValue('nom')).toLowerCase());
     this.updateMail()
 }
-
-
-
 
 }
