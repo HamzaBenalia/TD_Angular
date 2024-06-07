@@ -1,0 +1,29 @@
+<div class="signing-content" xmlns="http://www.w3.org/1999/html">
+  <mat-card>
+    <mat-card-title> Gestion des utilisateurs</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field class ="full-width-input">
+          <input matInput placeholder="User" formControlName="userName" required>
+          <mat-error *ngIf="isFieldInvalid('userName')">
+            Login incorrect
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="fll-width_input">
+          <input matInput type="password" placeholder="Password"
+          formControlName="password" required>
+          <mat-error *ngIf="isFieldInvalid('password')">
+            Mot de passe incorrect
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary"
+        [disabled]="processRunning || !form.valid"></button>
+        <mat-icon *ngIf="processRunning">
+          <mat-spinner diameter="16"></mat-spinner>
+        </mat-icon>
+        <button>connexion</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

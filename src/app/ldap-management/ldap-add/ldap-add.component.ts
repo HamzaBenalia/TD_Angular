@@ -16,7 +16,7 @@ export class LdapAddComponent extends LdapDetailsComponent implements OnInit{
               fb: FormBuilder,
               router:Router,
               private snackBar: MatSnackBar) {
-    super(false,fb, router);
+    super(true,fb, router); // normalement c'est false
   }
 
    ngOnInit() {

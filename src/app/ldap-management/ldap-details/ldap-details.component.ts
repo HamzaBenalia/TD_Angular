@@ -115,6 +115,7 @@ mail:{value:'', disabled: true},
   }
 protected getUserFromFormControl(): UserLdap{
     return {
+      id: this.user === undefined ? undefined : this.user.id,
       login: this.formGetValue('login'),
       nom: this.formGetValue('nom'),
       prenom: this.formGetValue('prenom'),
